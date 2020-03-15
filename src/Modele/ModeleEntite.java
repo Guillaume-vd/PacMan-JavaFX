@@ -10,8 +10,24 @@ package Modele;
  * @author p1920164
  */
 public class ModeleEntite implements Runnable{
-    
+    private Grille g;
     public void run(){
-        
+        while(actif){
+            
+        }
+    }
+    
+    public enum Direction{
+        HAUT,
+        BAS,
+        GAUCHE,
+        DROITE
+    }
+    
+    public enum DirectionInverse{
+        BAS,
+        HAUT,
+        GAUCHE,
+        DROITE
     }
 }
