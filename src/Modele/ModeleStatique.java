@@ -9,6 +9,7 @@ package Modele;
  *
  * @author p1920164
  */
-public class ModeleStatique {
+public class ModeleStatique extends Grille {
+    
     
 }

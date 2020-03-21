@@ -5,10 +5,39 @@
  */
 package Modele;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 /**
  *
  * @author p1920164
  */
 public class SuperPacgomme {
+    boolean mur = false;
+    boolean boost = false;
+    int timerboost = 0;
     
+    int nbSupPacgommeMange = 0; 
+    
+    public void eatSupPacgome(){
+        nbSupPacgommeMange++;
+        boost = true;
+        startTimer();
+    }
+    
+    public int geteatSupPacgome(){ return nbSupPacgommeMange; }
+
+    public boolean getbooct(){ return boost}
+    
+    public void startTimer(){
+        Timeline timeline = new Timeline(new KeyFrame(
+        Duration.seconds(8),
+        ae -> wakeup()));
+    }
+
+    private KeyFrame wakeup() {
+        boost = false;
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

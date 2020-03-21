@@ -10,5 +10,5 @@ package Modele;
  * @author p1920164
  */
 public class Mur extends ModeleStatique{
-    
+    boolean mur = true;
 }
