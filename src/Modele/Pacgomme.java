@@ -10,9 +10,13 @@ package Modele;
  * @author p1920164
  */
 public class Pacgomme extends ModeleStatique{
-    boolean mur = false;
+    
     int nbPacgommeMange = 0;
     //int nbPacgommeTotal = 200;
+    
+    public Pacgomme() {
+    	super.mur = false;
+    }
     
     public void eatPacgome(){
         nbPacgommeMange++;

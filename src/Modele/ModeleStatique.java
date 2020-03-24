@@ -10,6 +10,9 @@ package Modele;
  * @author p1920164
  */
 public class ModeleStatique extends Grille {
+	public boolean mur;
     
-    
+	public boolean estFranchissable() {
+		return mur;
+	}
 }

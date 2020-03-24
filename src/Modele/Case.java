@@ -10,5 +10,7 @@ package Modele;
  * @author p1920164
  */
 public class Case extends ModeleStatique{
-    
+    public Case() {
+    	super.mur=false;
+    }
 }

@@ -13,12 +13,15 @@ import javafx.util.Duration;
  *
  * @author p1920164
  */
-public class SuperPacgomme {
-    boolean mur = false;
+public class SuperPacgomme extends ModeleStatique{
     boolean boost = false;
     int timerboost = 0;
     
     int nbSupPacgommeMange = 0; 
+    
+    public SuperPacgomme() {
+    	super.mur=false;
+    }
     
     public void eatSupPacgome(){
         nbSupPacgommeMange++;
@@ -28,7 +31,7 @@ public class SuperPacgomme {
     
     public int geteatSupPacgome(){ return nbSupPacgommeMange; }
 
-    public boolean getbooct(){ return boost}
+    public boolean getboost(){ return boost;}
     
     public void startTimer(){
         Timeline timeline = new Timeline(new KeyFrame(
