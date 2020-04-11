@@ -5,6 +5,7 @@
  */
 package VueControleur;
     
+import Modele.Grille;
 import Modele.SimplePacMan;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,62 +24,63 @@ import javafx.stage.Stage;
  */
 public class SimpleVC extends Application {
     
-    public final int SIZE_X = 19;
-    public final int SIZE_Y = 21;
+    public final int SIZE_X = 31;
+    public final int SIZE_Y = 28;
+    private int[][] map;
     
     @Override
     public void start(Stage primaryStage) {
         // initialisation du modèle
-        SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); 
+        Grille grille = new Grille();
         // création de la grille
         GridPane grid = new GridPane();  
         
         // préparation des images
-        Image imPM = new Image("Pacman.png"); 
-        Image imVide = new Image("Vide.png");
-        Image imBean = new Image("bean.png");
-        Image imMur = new Image("mur.png");
-        Image imSpPacGome = new Image("pouvoir.png");
-        Image imFantome1 = new Image("fantome_cyan.png");
-        Image imFantome2 = new Image("fantome_orange.png");
-        Image imFantome3 = new Image("fantome_rose.png");
-        Image imFantome4 = new Image("fantome_rouge.png");
+        Image imPM = new Image("Image/Pacman.png"); 
+        Image imVide = new Image("Image/Vide.png");
+        Image imPG = new Image("Image/bean.png");
+        Image imMur = new Image("Image/mur.png");
+        Image imPouvoir = new Image("Image/pouvoir.png");
+        Image imFantome1 = new Image("Image/fantome_cyan.png");
+        Image imFantome2 = new Image("Image/fantome_orange.png");
+        Image imFantome3 = new Image("Image/fantome_rose.png");
+        Image imFantome4 = new Image("Image/fantome_rouge.png");
 
         
         //img.setScaleY(0.01);
         //img.setScaleX(0.01);
         
         // tableau permettant de récupérer les cases graphiques lors du rafraichissement
-        ImageView[][] tab = new ImageView[SIZE_Y][SIZE_X]; 
+        ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
 
         // initialisation de la grille (sans image)
-        for (int i = 0; i < SIZE_Y; i++) { 
-            for (int j = 0; j < SIZE_X; j++) {
+        for (int i = 0; i < SIZE_X; i++) { 
+            for (int j = 0; j < SIZE_Y; j++) {
                 ImageView img = new ImageView();
                 tab[i][j] = img;
-                grid.add(img, j, i);
-            }   
+                grid.add(img, i, j);
+            }
+            
         }
-
         
         Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
             public void update(Observable o, Object arg) {
                 // rafraichissement graphique
-                for (int i = 0; i < SIZE_Y; i++) { 
-                    for (int j = 0; j < SIZE_X; j++) {
-                        //System.out.println("i :"+i+", j: "+j);
-                        if (spm.map[i][j] == 0) { 
-                            tab[i][j].setImage(imMur); 
+            	map = grille.getmap();
+                for (int i = 0; i < SIZE_X; i++) { 
+                    for (int j = 0; j < SIZE_Y; j++) {
+                        if (map[i][j] == 0) { 
+                            tab[j][i].setImage(imMur); 
                         }
-                        else if (spm.map[i][j] == 1) { 
-                            tab[i][j].setImage(imBean); 
+                        else if (map[i][j] == 2) { 
+                            tab[j][i].setImage(imPG); 
                         }
-                        else if (spm.map[i][j] == 3) { 
-                            tab[i][j].setImage(imSpPacGome); 
+                        else if(map[i][j] == 3){
+                            tab[j][i].setImage(imPouvoir);                            
                         }
-                        else{
-                            tab[i][j].setImage(imVide);
+                        else {
+                            tab[j][i].setImage(imVide);
                         } 
                     }
                 }
@@ -102,6 +104,7 @@ public class SimpleVC extends Application {
             
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
+                // si on clique sur shift, on remet spm en haut à gauche
                  if (event.isShiftDown()) {
                     spm.initXY(); 
                 }
