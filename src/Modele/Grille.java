@@ -16,6 +16,7 @@ import Modele.ModeleEntite.Direction;
  */
 public class Grille {
     public Pacman p;
+    int x_max, y_max;
     private HashMap<Point, ModeleStatique> hm;
     private HashMap<ModeleEntite,Point> map_position;
     private Point spawn;
@@ -44,11 +45,11 @@ public class Grille {
     			}
     		}
     	}
-    	p=new Pacman();
-    	f1=new Fantome();
-    	f2=new Fantome();
-    	f3=new Fantome();
-    	f4=new Fantome();
+    	p=new Pacman(this);
+    	f1=new Fantome(this,1);
+    	f2=new Fantome(this,2);
+    	f3=new Fantome(this,3);
+    	f4=new Fantome(this,4);
     	
     	map_position.put(p, spawn);
     	map_position.put(f1, spawn);// regarder le point de spawn des fantomes
@@ -58,15 +59,70 @@ public class Grille {
     }
     
     public String test(Pacman p) {
+    	String test;
     	Point position=map_position.get(p);
-    	ModeleStatique case_position=hm.get(position);
-    	switch(case_position) {
-    		case 
+    	ModeleStatique ms;
+    	ms=hm.get(position);
+    	if(ms.possedeFantome()) {
+    		test="contact";
     	}
+    	else {
+    		test=ms.getLibelle();
+    	}
+    	return test;
+    	
     }
     
-    public boolean possible(Direction d) {
-    	return false;
+    public boolean possible(ModeleEntite m,Direction d) {
+    	boolean possible=false;
+    	ModeleStatique ms;
+    	Point position=map_position.get(m);
+    	int x=(int) position.getX();
+    	int y=(int) position.getY();
+    	Point pos_futur=position;
+    	switch(d) {
+    	case HAUT:
+    		if(y==0) {
+    			pos_futur.translate(x,y_max);
+    		}
+    		else {
+    			pos_futur.translate(0,-1);
+    		}
+    		break;
+    		
+    	case BAS:
+    		if(y==y_max) {
+    			pos_futur.move(x,0);
+    		}
+    		else {
+    			pos_futur.translate(0,1);
+    		}
+    		break;
+    		
+    	case GAUCHE:
+    		if(y==y_max) {
+    			pos_futur.move(x_max,y);
+    		}
+    		else {
+    			pos_futur.translate(-1,0);
+    		}
+    		break;
+    		
+    	case DROITE:
+    		if(x==x_max) {
+    			pos_futur.move(0,y);
+    		}
+    		else {
+    			pos_futur.translate(1,0);
+    		}
+    		break;
+    		
+    	default:
+    		break;
+    	}
+    	ms=hm.get(pos_futur);
+		possible=ms.estFranchissable();
+    	return possible;
     }
     
     public void deplacer(ModeleEntite m, Direction d) {
@@ -87,5 +143,17 @@ public class Grille {
     		default : break;
     	}
     }
+
+	public void Manger(Pacman pacman) {
+		Point position=map_position.get(pacman);
+		ModeleStatique ms=hm.get(position);
+		if(ms instanceof Pacgomme) {
+			((Pacgomme) ms).estMange();
+		}
+		else if(ms instanceof SuperPacgomme) {
+			((SuperPacgomme) ms).estMange();
+		}
+		
+	}
     
 }

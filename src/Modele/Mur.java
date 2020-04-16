@@ -12,5 +12,6 @@ package Modele;
 public class Mur extends ModeleStatique{
     public Mur() {
     	super.mur=true;
+    	super.libelle="mur";
     }
 }

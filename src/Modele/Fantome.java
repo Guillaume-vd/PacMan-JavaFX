@@ -14,8 +14,12 @@ import java.util.HashMap;
  */
 public class Fantome extends ModeleEntite{
     private Direction d_inv,d;
+    private int num_fantome;
+    private Grille g;
     private boolean vivant;
-    public Fantome(){
+    public Fantome(Grille g, int n){
+    	this.g=g;
+    	num_fantome=n;
     	vivant=true;
     }
     
@@ -25,7 +29,7 @@ public class Fantome extends ModeleEntite{
         int i=0;
         HashMap<Integer,Direction> tab =new HashMap<Integer,Direction>();
         for(Direction d1 : Direction.values()){
-          if(g.possible(d1) && d1!=d_inv) {
+          if(g.possible(this,d1) && d1!=d_inv) {
               chemin++;
               tab.put(chemin,d1);
           }

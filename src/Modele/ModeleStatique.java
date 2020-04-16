@@ -11,8 +11,27 @@ package Modele;
  */
 public class ModeleStatique extends Grille {
 	public boolean mur;
+	public boolean fantome;
+	public String libelle;
     
 	public boolean estFranchissable() {
 		return mur;
 	}
+	
+	public void setFantome() {
+		fantome=true;
+	}
+	
+	public void removeFantome() {
+		fantome=false;
+	}
+	
+	public boolean possedeFantome() {
+		return fantome;
+	}
+	
+	public String getLibelle() {
+		return libelle;
+	}
+	
 }

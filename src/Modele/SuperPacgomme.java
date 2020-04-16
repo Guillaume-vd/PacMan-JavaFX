@@ -15,14 +15,27 @@ import javafx.util.Duration;
  */
 public class SuperPacgomme extends ModeleStatique{
     boolean boost = false;
+    private boolean estMange;
     int timerboost = 0;
     
     int nbSupPacgommeMange = 0; 
     
     public SuperPacgomme() {
+    	estMange=false;
     	super.mur=false;
+    	super.libelle="superpacgomme";
+    }
+
+    public void estMange() {
+    	estMange=true;
+    	super.libelle="case";
     }
     
+    public boolean getMange() {
+    	return estMange;
+    	
+    }
+
     public void eatSupPacgome(){
         nbSupPacgommeMange++;
         boost = true;

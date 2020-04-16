@@ -15,7 +15,8 @@ public class Pacman extends ModeleEntite{
     private Direction d, d0;
     private boolean isSuper;
     
-    public Pacman(){
+    public Pacman(Grille g){
+    	this.g=g;
         score=0;
         truescore=0;
         nb_vie=3;
@@ -24,33 +25,42 @@ public class Pacman extends ModeleEntite{
     }
     
     public void action(){
-        if (g.test(this)=="pacgomme"){
-            score=score+100;
-            truescore++;
-        }
-        if (g.test(this)=="superpacgomme"){
-            score=score+200;
-            truescore++;
-            isSuper=true;
-        }
-        
-        if (g.test(this)=="mangerfantome"){
-            score=score+400;
-        }
-        if (g.test(this)=="contact") {
-        	nb_vie--;
-	        if(nb_vie==0){
-	        	System.out.println("Défaite");
-	      }
-        }
+    	String resultat=g.test(this);
+    	switch(resultat) {
+	    	case "pacgomme" :
+	    		g.Manger(this);
+	    		score=score+100;
+	            truescore++;
+	    		break;
+	    		
+	    	case "superpacgomme" :
+	    		score=score+200;
+	            truescore++;
+	            isSuper=true;
+	    		break;
+	    		
+	    	case "mangerfantome" :
+	    		score=score+400;
+	    		break;
+	    		
+	    	case "contact" :
+	    		nb_vie--;
+		        if(nb_vie==0){
+		        	System.out.println("Défaite");
+		        }
+	    		break;
+	    	
+	    	default :
+	    		break;
+    	}
         if (truescore==win_score){
             System.out.println("Vicotire");   
         }
         
-        if (g.possible(d)){
+        if (g.possible(this,d)){
             g.deplacer(this,d);
         }
-        else if(g.possible(d0)){
+        else if(g.possible(this,d0)){
             g.deplacer(this,d0);
         }
         

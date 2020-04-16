@@ -12,5 +12,6 @@ package Modele;
 public class Case extends ModeleStatique{
     public Case() {
     	super.mur=false;
+    	super.libelle="case";
     }
 }
