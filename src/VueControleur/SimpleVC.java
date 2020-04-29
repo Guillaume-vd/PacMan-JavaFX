@@ -6,7 +6,9 @@
 package VueControleur;
     
 import Modele.Grille;
+import Modele.Pacman;
 import Modele.SimplePacMan;
+
 import java.util.Observable;
 import java.util.Observer;
 import javafx.scene.image.Image;
@@ -17,10 +19,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
 /**
  *
- * @author frederic.armetta
+ * @author p1923494
  */
 public class SimpleVC extends Application {
     
@@ -28,28 +29,28 @@ public class SimpleVC extends Application {
     public final int SIZE_Y = 21;
     
     @Override
-    public void start(Stage primaryStage) {
-        // initialisation du modÃ¨le
-        SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); 
+    public void start(Stage primaryStage) { 
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
+        // initialisation du modèle
+        SimplePacMan spm = new SimplePacMan(SIZE_Y, SIZE_X); 
         // création de la grille
         GridPane grid = new GridPane();  
         
-        // prÃ©paration des images
+        // préparation des images
         Image imPM = new Image("Pacman.png"); 
         Image imVide = new Image("Vide.png");
-        Image imPG = new Image("bean.png");
+        Image imPacGome = new Image("bean.png");
+        Image imSpPacGome = new Image("pouvoir.png");
         Image imMur = new Image("mur.png");
-        Image imSupPG = new Image("pouvoir.png");
+        Image imPouvoir = new Image("pouvoir.png");
         Image imFantome1 = new Image("fantome_cyan.png");
         Image imFantome2 = new Image("fantome_orange.png");
         Image imFantome3 = new Image("fantome_rose.png");
         Image imFantome4 = new Image("fantome_rouge.png");
-
         
         // tableau permettant de récupérer les cases graphiques lors du rafraichissement
-        ImageView[][] tab = new ImageView[SIZE_Y][SIZE_X];
+        ImageView[][] tab = new ImageView[SIZE_Y][SIZE_X]; 
 
         // initialisation de la grille (sans image)
         for (int i = 0; i < SIZE_Y; i++) { 
@@ -65,8 +66,9 @@ public class SimpleVC extends Application {
             @Override
             public void update(Observable o, Object arg) {
                 // rafraichissement graphique
-                for (int i = 0; i < SIZE_X; i++) { 
-                    for (int j = 0; j < SIZE_Y; j++) {
+                for (int i = 0; i < SIZE_Y; i++) { 
+                    for (int j = 0; j < SIZE_X; j++) {
+                        //System.out.println("i :"+i+", j: "+j);
                         if (gr[i][j] == 0) { 
                             tab[j][i].setImage(imMur); 
                         }
@@ -74,10 +76,10 @@ public class SimpleVC extends Application {
                             tab[j][i].setImage(imVide); 
                         }
                         else if(gr[i][j] == 2){
-                            tab[j][i].setImage(imPG);                            
+                            tab[j][i].setImage(imPacGome);                            
                         }
                         else if(gr[i][j] == 3){
-                            tab[j][i].setImage(imSupPG);                            
+                            tab[j][i].setImage(imSpPacGome);                            
                         }
                         else {
                             tab[j][i].setImage(imVide);
@@ -89,22 +91,22 @@ public class SimpleVC extends Application {
         
 
         spm.addObserver(o);
-        spm.start(); // on dÃ©marre spm
+        spm.start(); // on démarre spm
         
         StackPane root = new StackPane();
         root.getChildren().add(grid);
         
-        Scene scene = new Scene(root, 300, 250);
+        Scene scene = new Scene(root, 380, 470);
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("PacMan");
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on Ã©coute le clavier
+        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
             
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
-                // si on clique sur shift, on remet spm en haut Ã  gauche
+                // si on clique sur shift, on remet spm en haut à gauche
                  if (event.isShiftDown()) {
                     spm.initXY(); 
                 }
