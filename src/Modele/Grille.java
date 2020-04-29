@@ -155,5 +155,8 @@ public class Grille {
 		}
 		
 	}
-    
+   
+	public int[][] getmap(){
+		return this.map;
+	}
 }

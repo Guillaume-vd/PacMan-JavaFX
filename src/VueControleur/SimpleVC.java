@@ -5,6 +5,7 @@
  */
 package VueControleur;
     
+import Modele.Grille;
 import Modele.SimplePacMan;
 import java.util.Observable;
 import java.util.Observer;
@@ -23,58 +24,60 @@ import javafx.stage.Stage;
  */
 public class SimpleVC extends Application {
     
-    public final int SIZE_X = 31;
-    public final int SIZE_Y = 28;
+    public final int SIZE_X = 19;
+    public final int SIZE_Y = 21;
     
     @Override
     public void start(Stage primaryStage) {
         // initialisation du mod√®le
         SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); 
-        // cr√©ation de la grille
+        Grille grille = new Grille();
+        int[][] gr = grille.getmap(); 
+        // crÈation de la grille
         GridPane grid = new GridPane();  
         
         // pr√©paration des images
         Image imPM = new Image("Pacman.png"); 
         Image imVide = new Image("Vide.png");
-        Image imBean = new Image("bean.png");
+        Image imPG = new Image("bean.png");
         Image imMur = new Image("mur.png");
-        Image imPouvoir = new Image("pouvoir.png");
+        Image imSupPG = new Image("pouvoir.png");
         Image imFantome1 = new Image("fantome_cyan.png");
         Image imFantome2 = new Image("fantome_orange.png");
         Image imFantome3 = new Image("fantome_rose.png");
         Image imFantome4 = new Image("fantome_rouge.png");
 
         
-        //img.setScaleY(0.01);
-        //img.setScaleX(0.01);
-        
-        // tableau permettant de r√©cup√©rer les cases graphiques lors du rafraichissement
-        ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
+        // tableau permettant de rÈcupÈrer les cases graphiques lors du rafraichissement
+        ImageView[][] tab = new ImageView[SIZE_Y][SIZE_X];
 
         // initialisation de la grille (sans image)
-        for (int i = 0; i < SIZE_X; i++) { 
-            for (int j = 0; j < SIZE_Y; j++) {
+        for (int i = 0; i < SIZE_Y; i++) { 
+            for (int j = 0; j < SIZE_X; j++) {
                 ImageView img = new ImageView();
                 tab[i][j] = img;
-                grid.add(img, i, j);
+                grid.add(img, j, i);
             }
-            
         }
         
-        Observer o =  new Observer() { // l'observer observe l'obervable (update est ex√©cut√© d√®s notifyObservers() est appel√© c√¥t√© mod√®le )
+        
+        Observer o =  new Observer() {// l'observer observe l'obervable (update est exÈcutÈ dËs notifyObservers() est appelÈ cÙtÈ modËle )
             @Override
             public void update(Observable o, Object arg) {
                 // rafraichissement graphique
                 for (int i = 0; i < SIZE_X; i++) { 
                     for (int j = 0; j < SIZE_Y; j++) {
-                        if (spm.map[i][j] == 0) { 
+                        if (gr[i][j] == 0) { 
                             tab[j][i].setImage(imMur); 
                         }
-                        else if (spm.map[i][j] == 1) { 
-                            tab[j][i].setImage(imBean); 
+                        else if (gr[i][j] == 1) { 
+                            tab[j][i].setImage(imVide); 
                         }
-                        else if(spm.map[i][j] == 2){
-                            tab[j][i].setImage(imPouvoir);                            
+                        else if(gr[i][j] == 2){
+                            tab[j][i].setImage(imPG);                            
+                        }
+                        else if(gr[i][j] == 3){
+                            tab[j][i].setImage(imSupPG);                            
                         }
                         else {
                             tab[j][i].setImage(imVide);
