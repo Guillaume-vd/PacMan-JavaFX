@@ -5,17 +5,26 @@
  */
 package VueControleur;
     
+import Modele.Fantome;
 import Modele.Grille;
+import Modele.ModeleEntite;
+import Modele.ModeleEntite.Direction;
 import Modele.Pacman;
 import Modele.SimplePacMan;
 
+import java.awt.Point;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+
+
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -24,7 +33,8 @@ import javafx.stage.Stage;
  * @author p1923494
  */
 public class SimpleVC extends Application {
-    
+	
+	private HashMap<ModeleEntite, Point> positions;
     public final int SIZE_X = 19;
     public final int SIZE_Y = 21;
     
@@ -33,10 +43,13 @@ public class SimpleVC extends Application {
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
         // initialisation du modèle
-        SimplePacMan spm = new SimplePacMan(SIZE_Y, SIZE_X); 
+        Pacman p =grille.getP();
+        Fantome f1=grille.getF1();
+        Fantome f2=grille.getF2();
+        Fantome f3=grille.getF3();
+        Fantome f4=grille.getF4();
         // création de la grille
         GridPane grid = new GridPane();  
-        
         // préparation des images
         Image imPM = new Image("Pacman.png"); 
         Image imVide = new Image("Vide.png");
@@ -60,38 +73,59 @@ public class SimpleVC extends Application {
                 grid.add(img, j, i);
             }
         }
+        for (int i = 0; i < SIZE_Y; i++) { 
+            for (int j = 0; j < SIZE_X; j++) {
+                //System.out.println("i :"+i+", j: "+j);
+                if (gr[i][j] == 0) { 
+                    tab[i][j].setImage(imMur); 
+                }
+                else if (gr[i][j] == 1) { 
+                    tab[i][j].setImage(imVide); 
+                }
+                else if(gr[i][j] == 2){
+                    tab[i][j].setImage(imPacGome);                            
+                }
+                else if(gr[i][j] == 3){
+                    tab[i][j].setImage(imSpPacGome);                            
+                }
+                else {
+                    tab[i][j].setImage(imVide);
+                } 
+            }
+        }
+        
+       
         
         
         Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
+            
             public void update(Observable o, Object arg) {
+            	int x_pacman,y_pacman,x_f1,x_f2,x_f3,x_f4,y_f1,y_f2,y_f3,y_f4;
+            	positions=grille.getMap_position();
+            	x_pacman = (int) positions.get(p).getX();
+            	y_pacman=(int) positions.get(p).getY();
+            	x_f1=(int) positions.get(f1).getX();
+            	x_f2=(int) positions.get(f2).getX();
+            	x_f3=(int) positions.get(f3).getX();
+            	x_f4=(int) positions.get(f4).getX();
+            	y_f1=(int) positions.get(f1).getY();
+            	y_f2=(int) positions.get(f2).getY();
+            	y_f3=(int) positions.get(f3).getY();
+            	y_f4=(int) positions.get(f4).getY();
+            	tab[x_pacman][y_pacman].setImage(imPM);
+            	tab[x_f1][y_f1].setImage(imFantome1);
+            	tab[x_f1][y_f2].setImage(imFantome2);
+            	tab[x_f1][y_f3].setImage(imFantome3);
+            	tab[x_f1][y_f4].setImage(imFantome4);
                 // rafraichissement graphique
-                for (int i = 0; i < SIZE_Y; i++) { 
-                    for (int j = 0; j < SIZE_X; j++) {
-                        //System.out.println("i :"+i+", j: "+j);
-                        if (gr[i][j] == 0) { 
-                            tab[j][i].setImage(imMur); 
-                        }
-                        else if (gr[i][j] == 1) { 
-                            tab[j][i].setImage(imVide); 
-                        }
-                        else if(gr[i][j] == 2){
-                            tab[j][i].setImage(imPacGome);                            
-                        }
-                        else if(gr[i][j] == 3){
-                            tab[j][i].setImage(imSpPacGome);                            
-                        }
-                        else {
-                            tab[j][i].setImage(imVide);
-                        } 
-                    }
-                }
+                
             }
         };
         
 
-        spm.addObserver(o);
-        spm.start(); // on démarre spm
+        p.addObserver(o);
+        p.start(); // on démarre spm
         
         StackPane root = new StackPane();
         root.getChildren().add(grid);
@@ -106,10 +140,22 @@ public class SimpleVC extends Application {
             
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
-                // si on clique sur shift, on remet spm en haut à gauche
-                 if (event.isShiftDown()) {
-                    spm.initXY(); 
-                }
+            	KeyCode key=event.getCode();
+            	switch(key) {
+            		case UP :
+            			p.setDirection(Direction.HAUT);
+            			break;
+            		case DOWN :
+            			p.setDirection(Direction.BAS);
+            			break;
+            		case LEFT :
+            			p.setDirection(Direction.GAUCHE);
+            			break;
+            		case RIGHT :
+            			p.setDirection(Direction.DROITE);
+            			break;
+            		default : break;
+            	}
             }
         });
         

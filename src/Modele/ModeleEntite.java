@@ -5,29 +5,24 @@
  */
 package Modele;
 
+import java.awt.Point;
+import java.util.Observable;
+
 /**
  *
  * @author p1920164
  */
-public class ModeleEntite implements Runnable{
-    private Grille g;
+public class ModeleEntite extends Observable implements Runnable{
     public void run(){
-        while(actif){
-            
-        }
+    	
     }
     
     public enum Direction{
         HAUT,
         BAS,
         GAUCHE,
-        DROITE
+        DROITE,
+        NULLE
     }
     
-    public enum DirectionInverse{
-        BAS,
-        HAUT,
-        GAUCHE,
-        DROITE
-    }
 }
