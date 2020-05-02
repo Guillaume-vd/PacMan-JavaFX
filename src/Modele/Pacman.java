@@ -5,14 +5,61 @@
  */
 package Modele;
 
+import java.net.URL;
 import java.awt.Point;
+import java.nio.file.Paths;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.scene.media.AudioClip;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+import java.util.Observable;
+import java.util.Observer;
+import javafx.scene.image.Image;
+import java.awt.Point;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+
 
 /**
  *
@@ -25,6 +72,9 @@ public class Pacman extends ModeleEntite implements Runnable{
     private Direction d, d0;
     private boolean isSuper;
     private Point spawn;
+    
+    //AudioClip pg = new AudioClip(Paths.get("PelletEat1.wav").toUri().toString());
+    //private AudioClip pg = new AudioClip(getClass().getResource("PelletEat1.wav").toString());
     
     public Pacman(Grille g){
     	this.g=g;
@@ -42,8 +92,12 @@ public class Pacman extends ModeleEntite implements Runnable{
 	}
     
     public void setDirection(Direction d) {
-    	this.d=d;   	
+    	this.d = d;   	
     }
+    
+    public Direction getDirection() {
+    	return this.d;
+    } 
     
     public void run(){
     	String resultat;
@@ -53,6 +107,7 @@ public class Pacman extends ModeleEntite implements Runnable{
 	 	    	case "pacgomme" :
 	 	    		g.Manger();
 	 	    		score=score+100;
+	 	    		pg.play();
 	 	    		break;
 	 	    		
 	 	    	case "superpacgomme" :
@@ -92,7 +147,7 @@ public class Pacman extends ModeleEntite implements Runnable{
  			 try {  
  			    Thread.sleep(t); // pause 
  			 }catch (InterruptedException ex) {
-               	Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
+               	//Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
  	         }   
          }
 

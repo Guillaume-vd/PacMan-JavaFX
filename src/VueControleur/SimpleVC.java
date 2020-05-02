@@ -1,5 +1,7 @@
 /*
  * To change this license header, choose License Headers in Project Properties.
+    private String direction = "";
+
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -10,7 +12,6 @@ import Modele.Grille;
 import Modele.ModeleEntite;
 import Modele.ModeleEntite.Direction;
 import Modele.Pacman;
-import Modele.SimplePacMan;
 
 import java.awt.Point;
 import java.util.HashMap;
@@ -22,14 +23,19 @@ import com.sun.prism.paint.Color;
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+
 /**
  *
  * @author p1923494
@@ -39,12 +45,17 @@ public class SimpleVC extends Application {
 	private HashMap<ModeleEntite, Point> positions;
     public final int SIZE_X = 21;
     public final int SIZE_Y = 19;
+    
+    private String direction = "";
+	private Label lblsc = new Label();
+	private Label lblvie = new Label();
    
     
     @Override
-    public void start(Stage primaryStage) {     	
+    public void start(Stage primaryStage) {  
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
+        
         // initialisation du modèle
         Pacman p =grille.getP();
         Thread t_p=new Thread(p);
@@ -56,10 +67,17 @@ public class SimpleVC extends Application {
         Thread t_f3=new Thread(f3);
         Fantome f4=grille.getF4();
         Thread t_f4=new Thread(f4);
+        
         // création de la grille
-        GridPane grid = new GridPane();  
+        GridPane grid = new GridPane(); 
+        
         // préparation des images
-        Image imPM = new Image("Pacman.png"); 
+        Image imPM = new Image("Pacman.png");
+        Image imPMHaut = new Image("pacmanHaut.png");
+        Image imPMBas = new Image("pacmanBas.png");
+        Image imPMDroite = new Image("pacmanDroite.png");
+        Image imPMGauche = new Image("pacmanGauche.png");
+
         Image imVide = new Image("Vide.png");
         Image imPacGome = new Image("bean.png");
         Image imSpPacGome = new Image("pouvoir.png");
@@ -77,7 +95,7 @@ public class SimpleVC extends Application {
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
         
         Text score = new Text();
-        
+                
         // initialisation de la grille (sans image)
         for (int i = 0; i < SIZE_X; i++) { 
             for (int j = 0; j < SIZE_Y; j++) {
@@ -91,10 +109,11 @@ public class SimpleVC extends Application {
         
         
         Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
-            @Override
-            
+
+			@Override
             // rafraichissement graphique
             public void update(Observable o, Object arg) {
+
             	for (int i = 0; i < SIZE_X; i++) { 
                     for (int j = 0; j < SIZE_Y; j++) {
                         if (gr[i][j] == 0) { 
@@ -130,7 +149,25 @@ public class SimpleVC extends Application {
             	y_f3=(int) positions.get(f3).getY();
             	y_f4=(int) positions.get(f4).getY();
 
-            	tab[x_pacman][y_pacman].setImage(imPM);
+            	//Affichage PacMan
+            	switch(direction) {
+            		case "HAUT":  
+            			tab[x_pacman][y_pacman].setImage(imPMHaut);
+            			break;
+            		case "BAS":  
+            			tab[x_pacman][y_pacman].setImage(imPMBas);
+            			break;
+            		case "DROITE":  
+            			tab[x_pacman][y_pacman].setImage(imPMDroite);
+            			break;
+            		case "GAUCHE":  
+            			tab[x_pacman][y_pacman].setImage(imPMGauche);
+            			break;
+            		default:
+            			tab[x_pacman][y_pacman].setImage(imPMDroite);
+            	}
+            	
+            	//Affichage fantome
             	if(p.getEtat()) {
             		tab[x_f1][y_f1].setImage(imFantomePeur);
 	            	tab[x_f2][y_f2].setImage(imFantomePeur);
@@ -142,12 +179,9 @@ public class SimpleVC extends Application {
 	            	tab[x_f3][y_f3].setImage(imFantome3);
 	            	tab[x_f4][y_f4].setImage(imFantome4);
             	}
-            	
-                       	
-            	score.setText(p.getScore());
-            	score.setX(360);
-            	score.setY(460);
-            	
+            	score.setTranslateX(370);
+            	score.setTranslateX(460);
+            	score.setText(p.getScore());            	
             }
         };
         
@@ -160,6 +194,7 @@ public class SimpleVC extends Application {
         t_f3.start();
         t_f4.start();
         StackPane root = new StackPane();
+        root.getChildren().add(score);
         root.getChildren().add(grid);
         
         Scene scene = new Scene(root, 380, 470);
