@@ -11,7 +11,7 @@ public class ModeleStatique {
 	public String libelle;
     
 	public boolean estFranchissable() {
-		return mur;
+		return !mur;
 	}
 	
 	public String getLibelle() {

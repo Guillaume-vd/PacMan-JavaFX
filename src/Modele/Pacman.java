@@ -10,12 +10,17 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
 /**
  *
  * @author p1920164
  */
 public class Pacman extends ModeleEntite implements Runnable{
-    private int truescore,score, nb_vie, win_score;
+    private int score, nb_vie, t;
+
     private Grille g;
     private Direction d, d0;
     private boolean isSuper;
@@ -24,13 +29,12 @@ public class Pacman extends ModeleEntite implements Runnable{
     public Pacman(Grille g){
     	this.g=g;
         score=0;
-        truescore=0;
         nb_vie=3;
         isSuper=false;
-        win_score=20;
         spawn=new Point(7,9);
         d=Direction.NULLE;
         d0=Direction.NULLE;
+        t=200;
     }
     
     public Point getSpawn() {
@@ -38,9 +42,7 @@ public class Pacman extends ModeleEntite implements Runnable{
 	}
     
     public void setDirection(Direction d) {
-    	d0=this.d;
-    	this.d=d;
-    	
+    	this.d=d;   	
     }
     
     public void run(){
@@ -49,49 +51,46 @@ public class Pacman extends ModeleEntite implements Runnable{
     		 resultat=g.test();
     		 switch(resultat) {
 	 	    	case "pacgomme" :
-	 	    		g.Manger(this);
+	 	    		g.Manger();
 	 	    		score=score+100;
-	 	            truescore++;
 	 	    		break;
 	 	    		
 	 	    	case "superpacgomme" :
+	 	    		g.Manger();
 	 	    		score=score+200;
-	 	            truescore++;
 	 	            isSuper=true;
 	 	    		break;
 	 	    		
-	 	    	case "mangerfantome" :
+	 	    	case "manger" :
 	 	    		score=score+400;
 	 	    		break;
 	 	    		
 	 	    	case "contact" :
 	 	    		nb_vie--;
 	 		        if(nb_vie==0){
-	 		        	System.out.println("Défaite");
+	 		        	System.out.println("DEFAITE");
 	 		        }
 	 	    		break;
 	 	    	
 	 	    	default :
 	 	    		break;
 	     	}
-	         if (truescore==win_score){
-	             System.out.println("Vicotire");   
-	         }
 	         
 	         if (g.possible(this,d)){
 	             g.deplacer(this,d);
+	             d0=d;
+	             d=Direction.NULLE;
 	         }
 	         else if(g.possible(this,d0)){
 	             g.deplacer(this,d0);
 	         }
- 			 //System.out.println(x + " - " + y);
  			 setChanged();
  	        
  			 // notification de l'observer
  	         notifyObservers(); 
             
  			 try {  
- 			    Thread.sleep(300); // pause 
+ 			    Thread.sleep(t); // pause 
  			 }catch (InterruptedException ex) {
                	Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
  	         }   
@@ -99,17 +98,36 @@ public class Pacman extends ModeleEntite implements Runnable{
 
     }
     
-    public void action(){
-    	
-    	
-        
+    public int getScore(){
+    	return score;  	 
     }
     
-    public void start() {
-        new Thread(this).start();
-}
+    public int getVies(){
+    	return nb_vie;  	 
+    }
     
     public boolean getEtat() {
     	return isSuper;
     }
+
+	public void startSuper() {
+		stopSuper();
+		t=150;
+		isSuper=true;
+		Timeline timeline = new Timeline(new KeyFrame(
+		        Duration.millis(5000),
+		        ae -> stopSuper()));
+		timeline.play();
+		
+	}
+
+	private void stopSuper() {
+		t=200;
+		isSuper=false;		
+	}
+
+	public void gagner() {
+		System.out.println("GG");
+		
+	}
 }

@@ -17,28 +17,39 @@ import java.util.logging.Logger;
  */
 public class Fantome extends ModeleEntite implements Runnable{
     private Direction d_inv,d;
+    private int x,y;
+    private int t;
     private int num_fantome;
     private Grille g;
     private boolean vivant;
-    private Point spawn;
+    private Point spawn=new Point();
     HashMap<Integer,Direction> d_possibles =new HashMap<Integer,Direction>();
     
     public Fantome(Grille g, int n){
     	this.g=g;
     	num_fantome=n;
     	vivant=true;
+    	t=200;
     	switch(n) {
     		case 1 :
-    			spawn=new Point(8,9);
+    			x=8;
+    			y=9;
+    			spawn.setLocation(x, y);
     			break;
     		case 2 :
-    			spawn=new Point(9,9);
+    			x=9;
+    			y=8;
+    			spawn.setLocation(x,y);
     			break;
     		case 3 :
-    			spawn=new Point(9,8);
+    			x=9;
+    			y=9;
+    			spawn.setLocation(x,y);
     			break;
     		case 4 :
-    			spawn=new Point(9,10);
+    			x=9;
+    			y=10;
+    			spawn.setLocation(x,y);
     			break;
     		default : break;
     	}
@@ -49,69 +60,62 @@ public class Fantome extends ModeleEntite implements Runnable{
 	}
 
 	public void run(){
-    	// spm descent dans la grille à chaque pas de temps
         while(true) { 
-           
-			//System.out.println(x + " - " + y);
+        	d_possibles.clear();
+        	d_inv=getInv(d);
+        	d=Direction.NULLE;
+            int chemin=0;
+            int i=0;
+            
+            for(Direction d1 : Direction.values()){
+              if(g.possible(this,d1) && d1!=d_inv) {
+                  chemin++;
+                  d_possibles.put(chemin,d1);
+              }
+            }
+            double r=Math.random();
+            if(chemin==1) {
+            	d=d_possibles.get(chemin);
+            }
+            if(chemin==2) {
+           		if(r<0.45) d=d_possibles.get(1);
+           		else if(r>0.45 && r<0.90) d=d_possibles.get(2);
+           		else d=d_inv;
+           	}
+           	if(chemin==3) {
+           		if(r<0.3) d=d_possibles.get(1);
+           		else if(r>0.3 && r<0.6) d=d_possibles.get(2);
+           		else if(r>0.6 && r<0.9) d=d_possibles.get(3);        		
+           		else d=d_inv;
+            }
+            g.deplacer(this,d);
 			setChanged();
 	        
 			// notification de l'observer
 	        notifyObservers(); 
            
 			try {  
-				Thread.sleep(300); // pause 
+				Thread.sleep(t); // pause 
 			}catch (InterruptedException ex) {
               	Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
-	        }   
+	        }
+			t=300;
         }
     	
-    }
-    
-    public void action(){
-    	d_possibles.clear();
-    	d_inv=getInv(d);
-        int chemin=0;
-        int i=0;
-        
-        for(Direction d1 : Direction.values()){
-          if(g.possible(this,d1) && d1!=d_inv) {
-              chemin++;
-              d_possibles.put(chemin,d1);
-          }
-        }
-        if(vivant) {
-        	double r=Math.random();
-        	if(chemin==1) {
-        		d=d_possibles.get(chemin);
-        	}
-        	if(chemin==2) {
-        		if(r<0.45) d=d_possibles.get(1);
-        		if(r>0.45 && r<0.90) d=d_possibles.get(2);
-        		else d=d_inv;
-        	}
-        	if(chemin==3) {
-        		if(r<0.3) d=d_possibles.get(1);
-        		if(r>0.3 && r<0.6) d=d_possibles.get(2);
-        		if(r>0.6 && r<0.9) d=d_possibles.get(3);
-        		else d=d_inv;
-        	}
-        	
-        }
-        else {
-        	d=goSpawn();
-        }
-        g.deplacer(this,d);
-    }
-    
+    }    
     
 	private Direction getInv(Direction d) {
 		if(d==Direction.HAUT) return Direction.BAS;
-		if(d==Direction.BAS) return Direction.HAUT;
-		if(d==Direction.GAUCHE) return Direction.DROITE;
-		else return Direction.GAUCHE;
+		else if(d==Direction.BAS) return Direction.HAUT;
+		else if(d==Direction.GAUCHE) return Direction.DROITE;
+		else if(d==Direction.DROITE) return Direction.GAUCHE;
+		else return Direction.NULLE;
 	}
 
-	private Direction goSpawn() {
-		return d;
+
+	public void kill() {
+		g.setPosition(this,x,y);
+		t=3000;
 	}
+	
 }

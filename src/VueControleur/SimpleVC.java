@@ -35,8 +35,8 @@ import javafx.stage.Stage;
 public class SimpleVC extends Application {
 	
 	private HashMap<ModeleEntite, Point> positions;
-    public final int SIZE_X = 19;
-    public final int SIZE_Y = 21;
+    public final int SIZE_X = 21;
+    public final int SIZE_Y = 19;
     
     @Override
     public void start(Stage primaryStage) { 
@@ -44,10 +44,15 @@ public class SimpleVC extends Application {
         int[][] gr = grille.getmap(); 
         // initialisation du modèle
         Pacman p =grille.getP();
+        Thread t_p=new Thread(p);
         Fantome f1=grille.getF1();
+        Thread t_f1=new Thread(f1);
         Fantome f2=grille.getF2();
+        Thread t_f2=new Thread(f2);
         Fantome f3=grille.getF3();
+        Thread t_f3=new Thread(f3);
         Fantome f4=grille.getF4();
+        Thread t_f4=new Thread(f4);
         // création de la grille
         GridPane grid = new GridPane();  
         // préparation des images
@@ -63,35 +68,15 @@ public class SimpleVC extends Application {
         Image imFantome4 = new Image("fantome_rouge.png");
         
         // tableau permettant de récupérer les cases graphiques lors du rafraichissement
-        ImageView[][] tab = new ImageView[SIZE_Y][SIZE_X]; 
+        ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
 
         // initialisation de la grille (sans image)
-        for (int i = 0; i < SIZE_Y; i++) { 
-            for (int j = 0; j < SIZE_X; j++) {
+        for (int i = 0; i < SIZE_X; i++) { 
+            for (int j = 0; j < SIZE_Y; j++) {
                 ImageView img = new ImageView();
                 tab[i][j] = img;
                 grid.add(img, j, i);
-            }
-        }
-        for (int i = 0; i < SIZE_Y; i++) { 
-            for (int j = 0; j < SIZE_X; j++) {
-                //System.out.println("i :"+i+", j: "+j);
-                if (gr[i][j] == 0) { 
-                    tab[i][j].setImage(imMur); 
-                }
-                else if (gr[i][j] == 1) { 
-                    tab[i][j].setImage(imVide); 
-                }
-                else if(gr[i][j] == 2){
-                    tab[i][j].setImage(imPacGome);                            
-                }
-                else if(gr[i][j] == 3){
-                    tab[i][j].setImage(imSpPacGome);                            
-                }
-                else {
-                    tab[i][j].setImage(imVide);
-                } 
-            }
+            }        
         }
         
        
@@ -101,6 +86,25 @@ public class SimpleVC extends Application {
             @Override
             
             public void update(Observable o, Object arg) {
+            	for (int i = 0; i < SIZE_X; i++) { 
+                    for (int j = 0; j < SIZE_Y; j++) {
+                        if (gr[i][j] == 0) { 
+                            tab[i][j].setImage(imMur); 
+                        }
+                        else if (gr[i][j] == 1) { 
+                            tab[i][j].setImage(imVide); 
+                        }
+                        else if(gr[i][j] == 2){
+                            tab[i][j].setImage(imPacGome);                            
+                        }
+                        else if(gr[i][j] == 3){
+                            tab[i][j].setImage(imSpPacGome);                            
+                        }
+                        else {
+                            tab[i][j].setImage(imVide);
+                        } 
+                    }
+            	}
             	int x_pacman,y_pacman,x_f1,x_f2,x_f3,x_f4,y_f1,y_f2,y_f3,y_f4;
             	positions=grille.getMap_position();
             	x_pacman = (int) positions.get(p).getX();
@@ -113,11 +117,12 @@ public class SimpleVC extends Application {
             	y_f2=(int) positions.get(f2).getY();
             	y_f3=(int) positions.get(f3).getY();
             	y_f4=(int) positions.get(f4).getY();
+
             	tab[x_pacman][y_pacman].setImage(imPM);
             	tab[x_f1][y_f1].setImage(imFantome1);
-            	tab[x_f1][y_f2].setImage(imFantome2);
-            	tab[x_f1][y_f3].setImage(imFantome3);
-            	tab[x_f1][y_f4].setImage(imFantome4);
+            	tab[x_f2][y_f2].setImage(imFantome2);
+            	tab[x_f3][y_f3].setImage(imFantome3);
+            	tab[x_f4][y_f4].setImage(imFantome4);
                 // rafraichissement graphique
                 
             }
@@ -125,8 +130,12 @@ public class SimpleVC extends Application {
         
 
         p.addObserver(o);
-        p.start(); // on démarre spm
-        
+
+        t_p.start();
+        t_f1.start();
+        t_f2.start();
+        t_f3.start();
+        t_f4.start();
         StackPane root = new StackPane();
         root.getChildren().add(grid);
         
@@ -161,12 +170,5 @@ public class SimpleVC extends Application {
         
         grid.requestFocus();  
     }
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        launch(args);
-    }
-    
+  
 }
