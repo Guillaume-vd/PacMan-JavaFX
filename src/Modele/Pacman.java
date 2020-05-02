@@ -32,7 +32,7 @@ public class Pacman extends ModeleEntite implements Runnable{
         nb_vie=3;
         isSuper=false;
         spawn=new Point(7,9);
-        d=Direction.NULLE;
+        d = Direction.NULLE;
         d0=Direction.NULLE;
         t=200;
     }
@@ -42,8 +42,12 @@ public class Pacman extends ModeleEntite implements Runnable{
 	}
     
     public void setDirection(Direction d) {
-    	this.d=d;   	
+    	this.d = d;   	
     }
+    
+    public Direction getDirection() {
+    	return this.d;
+    } 
     
     public void run(){
     	String resultat;
@@ -92,7 +96,7 @@ public class Pacman extends ModeleEntite implements Runnable{
  			 try {  
  			    Thread.sleep(t); // pause 
  			 }catch (InterruptedException ex) {
-               	Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
+               	//Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
  	         }   
          }
 
