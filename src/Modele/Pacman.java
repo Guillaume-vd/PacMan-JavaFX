@@ -98,8 +98,8 @@ public class Pacman extends ModeleEntite implements Runnable{
 
     }
     
-    public int getScore(){
-    	return score;  	 
+    public String getScore(){
+    	return String.valueOf(score);  	 
     }
     
     public int getVies(){
@@ -118,7 +118,6 @@ public class Pacman extends ModeleEntite implements Runnable{
 		        Duration.millis(5000),
 		        ae -> stopSuper()));
 		timeline.play();
-		
 	}
 
 	private void stopSuper() {

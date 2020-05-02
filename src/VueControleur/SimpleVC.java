@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
+import com.sun.prism.paint.Color;
 
 import javafx.scene.image.Image;
 import javafx.application.Application;
@@ -27,6 +28,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 /**
  *
@@ -37,9 +39,10 @@ public class SimpleVC extends Application {
 	private HashMap<ModeleEntite, Point> positions;
     public final int SIZE_X = 21;
     public final int SIZE_Y = 19;
+   
     
     @Override
-    public void start(Stage primaryStage) { 
+    public void start(Stage primaryStage) {     	
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
         // initialisation du modèle
@@ -66,10 +69,15 @@ public class SimpleVC extends Application {
         Image imFantome2 = new Image("fantome_orange.png");
         Image imFantome3 = new Image("fantome_rose.png");
         Image imFantome4 = new Image("fantome_rouge.png");
+        Image imFantomePeur = new Image("FantomePeur.png");
+    	Image imMurBase = new Image("murbase.png");
+
         
         // tableau permettant de récupérer les cases graphiques lors du rafraichissement
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
-
+        
+        Text score = new Text();
+        
         // initialisation de la grille (sans image)
         for (int i = 0; i < SIZE_X; i++) { 
             for (int j = 0; j < SIZE_Y; j++) {
@@ -85,6 +93,7 @@ public class SimpleVC extends Application {
         Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
             
+            // rafraichissement graphique
             public void update(Observable o, Object arg) {
             	for (int i = 0; i < SIZE_X; i++) { 
                     for (int j = 0; j < SIZE_Y; j++) {
@@ -100,6 +109,9 @@ public class SimpleVC extends Application {
                         else if(gr[i][j] == 3){
                             tab[i][j].setImage(imSpPacGome);                            
                         }
+                        /*else if(gr[i][j] == 5){
+                            tab[i][j].setImage(imMurBase);                            
+                        }*/
                         else {
                             tab[i][j].setImage(imVide);
                         } 
@@ -119,12 +131,23 @@ public class SimpleVC extends Application {
             	y_f4=(int) positions.get(f4).getY();
 
             	tab[x_pacman][y_pacman].setImage(imPM);
-            	tab[x_f1][y_f1].setImage(imFantome1);
-            	tab[x_f2][y_f2].setImage(imFantome2);
-            	tab[x_f3][y_f3].setImage(imFantome3);
-            	tab[x_f4][y_f4].setImage(imFantome4);
-                // rafraichissement graphique
-                
+            	if(p.getEtat()) {
+            		tab[x_f1][y_f1].setImage(imFantomePeur);
+	            	tab[x_f2][y_f2].setImage(imFantomePeur);
+	            	tab[x_f3][y_f3].setImage(imFantomePeur);
+	            	tab[x_f4][y_f4].setImage(imFantomePeur);
+            	} else {
+            		tab[x_f1][y_f1].setImage(imFantome1);
+	            	tab[x_f2][y_f2].setImage(imFantome2);
+	            	tab[x_f3][y_f3].setImage(imFantome3);
+	            	tab[x_f4][y_f4].setImage(imFantome4);
+            	}
+            	
+                       	
+            	score.setText(p.getScore());
+            	score.setX(360);
+            	score.setY(460);
+            	
             }
         };
         
