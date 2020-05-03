@@ -97,7 +97,7 @@ public class Fantome extends ModeleEntite implements Runnable{
 			try {  
 				Thread.sleep(t); // pause 
 			}catch (InterruptedException ex) {
-              	Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
+              	//Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
 	        }
 			t=300;
         }

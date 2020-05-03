@@ -73,7 +73,7 @@ public class Pacman extends ModeleEntite implements Runnable{
     private boolean isSuper;
     private Point spawn;
     
-    //AudioClip pg = new AudioClip(Paths.get("PelletEat1.wav").toUri().toString());
+    //AudioClip pg = new AudioClip(Paths.get("Audio/PelletEat1.wav").toUri().toString());
     //private AudioClip pg = new AudioClip(getClass().getResource("PelletEat1.wav").toString());
     
     public Pacman(Grille g){
@@ -107,7 +107,7 @@ public class Pacman extends ModeleEntite implements Runnable{
 	 	    	case "pacgomme" :
 	 	    		g.Manger();
 	 	    		score=score+100;
-	 	    		pg.play();
+	 	    		//pg.play();
 	 	    		break;
 	 	    		
 	 	    	case "superpacgomme" :

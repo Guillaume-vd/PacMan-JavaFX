@@ -47,16 +47,14 @@ public class SimpleVC extends Application {
     public final int SIZE_Y = 19;
     
     private String direction = "";
-	private Label lblsc = new Label();
-	private Label lblvie = new Label();
-   
+    private String sc = "score :";
     
     @Override
     public void start(Stage primaryStage) {  
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
         
-        // initialisation du modÃ¨le
+        // initialisation du modèle
         Pacman p =grille.getP();
         Thread t_p=new Thread(p);
         Fantome f1=grille.getF1();
@@ -68,11 +66,11 @@ public class SimpleVC extends Application {
         Fantome f4=grille.getF4();
         Thread t_f4=new Thread(f4);
         
-        // crÃ©ation de la grille
+        // création de la grille
         GridPane grid = new GridPane(); 
         
-        // prÃ©paration des images
-       Image imPM = new Image("Pacman.png");
+        // préparation des images
+        Image imPM = new Image("Pacman.png");
         Image imPMHaut = new Image("pacmanHaut.png");
         Image imPMBas = new Image("pacmanBas.png");
         Image imPMDroite = new Image("pacmanDroite.png");
@@ -91,11 +89,12 @@ public class SimpleVC extends Application {
     	Image imMurBase = new Image("murbase.png");
 
         
-        // tableau permettant de rÃ©cupÃ©rer les cases graphiques lors du rafraichissement
+        // tableau permettant de récupérer les cases graphiques lors du rafraichissement
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
         
         Text score = new Text();
-                
+        Text scoreT = new Text(sc);
+
         // initialisation de la grille (sans image)
         for (int i = 0; i < SIZE_X; i++) { 
             for (int j = 0; j < SIZE_Y; j++) {
@@ -108,7 +107,7 @@ public class SimpleVC extends Application {
        
         
         
-        Observer o =  new Observer() {// l'observer observe l'obervable (update est exÃ©cutÃ© dÃ¨s notifyObservers() est appelÃ© cÃ´tÃ© modÃ¨le )
+        Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
 
 			@Override
             // rafraichissement graphique
@@ -179,8 +178,6 @@ public class SimpleVC extends Application {
 	            	tab[x_f3][y_f3].setImage(imFantome3);
 	            	tab[x_f4][y_f4].setImage(imFantome4);
             	}
-            	score.setTranslateX(370);
-            	score.setTranslateX(460);
             	score.setText(p.getScore());            	
             }
         };
@@ -194,7 +191,16 @@ public class SimpleVC extends Application {
         t_f3.start();
         t_f4.start();
         StackPane root = new StackPane();
+
+        //Position par rapport au centre de l'image
+        score.setTranslateX(-140);
+        score.setTranslateY(200);
         root.getChildren().add(score);
+
+        scoreT.setTranslateX(-163);
+        scoreT.setTranslateY(200);
+        root.getChildren().add(scoreT);
+
         root.getChildren().add(grid);
         
         Scene scene = new Scene(root, 380, 470);
@@ -203,7 +209,7 @@ public class SimpleVC extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on Ã©coute le clavier
+        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
             
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
@@ -211,16 +217,20 @@ public class SimpleVC extends Application {
             	switch(key) {
             		case UP :
             			p.setDirection(Direction.HAUT);
+            			direction = "HAUT";
             			break;
             		case DOWN :
             			p.setDirection(Direction.BAS);
+                        direction = "BAS";
             			break;
             		case LEFT :
             			p.setDirection(Direction.GAUCHE);
+                        direction = "GAUCHE";
             			break;
             		case RIGHT :
             			p.setDirection(Direction.DROITE);
-            			break;
+                        direction = "DROITE";
+                        break;
             		default : break;
             	}
             }
