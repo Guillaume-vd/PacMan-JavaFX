@@ -56,7 +56,7 @@ public class SimpleVC extends Application {
         Grille grille = new Grille();
         int[][] gr = grille.getmap(); 
         
-        // initialisation du modèle
+        // initialisation du modÃ¨le
         Pacman p =grille.getP();
         Thread t_p=new Thread(p);
         Fantome f1=grille.getF1();
@@ -68,11 +68,11 @@ public class SimpleVC extends Application {
         Fantome f4=grille.getF4();
         Thread t_f4=new Thread(f4);
         
-        // création de la grille
+        // crÃ©ation de la grille
         GridPane grid = new GridPane(); 
         
-        // préparation des images
-        Image imPM = new Image("Pacman.png");
+        // prÃ©paration des images
+       Image imPM = new Image("Pacman.png");
         Image imPMHaut = new Image("pacmanHaut.png");
         Image imPMBas = new Image("pacmanBas.png");
         Image imPMDroite = new Image("pacmanDroite.png");
@@ -91,7 +91,7 @@ public class SimpleVC extends Application {
     	Image imMurBase = new Image("murbase.png");
 
         
-        // tableau permettant de récupérer les cases graphiques lors du rafraichissement
+        // tableau permettant de rÃ©cupÃ©rer les cases graphiques lors du rafraichissement
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
         
         Text score = new Text();
@@ -108,7 +108,7 @@ public class SimpleVC extends Application {
        
         
         
-        Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
+        Observer o =  new Observer() {// l'observer observe l'obervable (update est exÃ©cutÃ© dÃ¨s notifyObservers() est appelÃ© cÃ´tÃ© modÃ¨le )
 
 			@Override
             // rafraichissement graphique
@@ -203,7 +203,7 @@ public class SimpleVC extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         
-        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
+        root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on Ã©coute le clavier
             
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
