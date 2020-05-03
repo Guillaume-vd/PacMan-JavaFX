@@ -12,29 +12,23 @@ import Modele.Grille;
 import Modele.ModeleEntite;
 import Modele.ModeleEntite.Direction;
 import Modele.Pacman;
-
 import java.awt.Point;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
-import com.sun.prism.paint.Color;
-
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 
 /**
  *
@@ -48,11 +42,14 @@ public class SimpleVC extends Application {
     
     private String direction = "";
     private String sc = "score :";
+    private String nbVie = "nombre de vie :";
     
     @Override
     public void start(Stage primaryStage) {  
         Grille grille = new Grille();
-        int[][] gr = grille.getmap(); 
+        int[][] gr = grille.getmap();
+
+        HBox hboxvies = new HBox();
         
         // initialisation du modèle
         Pacman p =grille.getP();
@@ -80,7 +77,6 @@ public class SimpleVC extends Application {
         Image imPacGome = new Image("bean.png");
         Image imSpPacGome = new Image("pouvoir.png");
         Image imMur = new Image("mur.png");
-        Image imPouvoir = new Image("pouvoir.png");
         Image imFantome1 = new Image("fantome_cyan.png");
         Image imFantome2 = new Image("fantome_orange.png");
         Image imFantome3 = new Image("fantome_rose.png");
@@ -88,7 +84,12 @@ public class SimpleVC extends Application {
         Image imFantomePeur = new Image("FantomePeur.png");
     	Image imMurBase = new Image("murbase.png");
 
-        
+        ImageView imvVie1 = new ImageView();
+        ImageView imvVie2 = new ImageView();
+        ImageView imvVie3 = new ImageView();
+
+
+
         // tableau permettant de récupérer les cases graphiques lors du rafraichissement
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; 
         
@@ -103,10 +104,7 @@ public class SimpleVC extends Application {
                 grid.add(img, j, i);
             }        
         }
-        
-       
-        
-        
+
         Observer o =  new Observer() {// l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
 
 			@Override
@@ -178,7 +176,29 @@ public class SimpleVC extends Application {
 	            	tab[x_f3][y_f3].setImage(imFantome3);
 	            	tab[x_f4][y_f4].setImage(imFantome4);
             	}
-            	score.setText(p.getScore());            	
+            	score.setText(p.getScore());
+
+                //Affichage Vie
+                switch(p.getVies()) {
+                    case 1:
+                        imvVie3.setImage(imVide);
+                        imvVie2.setImage(imVide);
+                        imvVie1.setImage(imPM);
+                        break;
+                    case 2:
+                        imvVie3.setImage(imVide);
+                        imvVie2.setImage(imPM);
+                        imvVie1.setImage(imPM);
+                        break;
+                    case 3:
+                        imvVie3.setImage(imPM);
+                        imvVie2.setImage(imPM);
+                        imvVie1.setImage(imPM);
+                        break;
+                    default:
+                        tab[x_pacman][y_pacman].setImage(imPMDroite);
+                }
+
             }
         };
         
@@ -193,7 +213,7 @@ public class SimpleVC extends Application {
         StackPane root = new StackPane();
 
         //Position par rapport au centre de l'image
-        score.setTranslateX(-140);
+        score.setTranslateX(-130);
         score.setTranslateY(200);
         root.getChildren().add(score);
 
@@ -201,16 +221,28 @@ public class SimpleVC extends Application {
         scoreT.setTranslateY(200);
         root.getChildren().add(scoreT);
 
+        //Gestion de la vie
+        imvVie1.setTranslateX(150);
+        imvVie1.setTranslateY(200);
+        imvVie2.setTranslateX(130);
+        imvVie2.setTranslateY(200);
+        imvVie3.setTranslateX(110);
+        imvVie3.setTranslateY(200);
+        root.getChildren().add(imvVie1);
+        root.getChildren().add(imvVie2);
+        root.getChildren().add(imvVie3);
+
+        //Ajout de la grille
         root.getChildren().add(grid);
-        
+
         Scene scene = new Scene(root, 380, 470);
-        
+
         primaryStage.setTitle("PacMan");
         primaryStage.setScene(scene);
         primaryStage.show();
-        
+
         root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
-            
+
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
             	KeyCode key=event.getCode();
@@ -233,10 +265,11 @@ public class SimpleVC extends Application {
                         break;
             		default : break;
             	}
+
             }
         });
-        
-        grid.requestFocus();  
+
+        grid.requestFocus();
     }
-  
+
 }
